@@ -23,24 +23,36 @@ public class SnakeGame extends PApplet{
 
   public void draw(){
     //container
-    fill(30, 30, 40, 20);
+    fill(30, 30, 40);
     rect(0, 0, width, height);
     
     snakeX += xSpeed;
     snakeY += ySpeed;
 
-    //objects
+    //snake movement
     fill(255,0,0);
     rect(snakeX, snakeY, 30,30);
-
+    //food
     fill(0, 200, 255); 
     ellipse(foodX, foodY, 20, 20);
+
+    //to check if snake eats food
+    if(snakeX < foodX + 20 &&
+      snakeX + 30 > foodX &&
+      snakeY < foodY + 20 &&
+      snakeY + 30 > foodY){
+
+        //move food to random location
+        foodX = (int) random(20, width-20);
+        foodY = (int) random(20, height - 20);
+      }
   }
   
   public static void main(String[] args){
       PApplet.main("SnakeGame");
   }
 
+  
   public void keyPressed(){
     if(keyCode == RIGHT){
       xSpeed = 5;
