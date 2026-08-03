@@ -36,11 +36,24 @@ public class SnakeGame extends PApplet{
     text("Score : "+score , 20, 30);
   }
 
+  //for wall collision
+  public void checkWallCollision(){
+    if (snakeX.get(0) < 0 ||
+        snakeX.get(0) + 30 > width ||
+        snakeY.get(0) < 0 ||
+        snakeY.get(0) + 30 > height) {
+
+        // Game Over
+        noLoop();
+    }
+  }
+  //draw the main features
   public void draw() {
     
 
     background(30,30,40);//clear screen first
     drawScore();//then score board
+    checkWallCollision();//check for the wall collision
 
     // Move body
     for(int i = snakeX.size() - 1; i > 0; i--){
