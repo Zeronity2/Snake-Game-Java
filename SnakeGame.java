@@ -1,121 +1,175 @@
 import java.util.ArrayList;
-
 import processing.core.PApplet;
 
-public class SnakeGame extends PApplet{
-  //intial windows setup
-  // int snakeX = 300;
-  // int snakeY = 200;
-  int score = 0;
+public class SnakeGame extends PApplet {
 
-  int xSpeed = 0;
-  int ySpeed = 0;
+    // Game settings
+    int cellSize = 15;
+    int score = 0;
 
-  int foodX = 100;
-  int foodY=100;
+    int xSpeed = 0;
+    int ySpeed = 0;
 
-  ArrayList<Integer> snakeX = new ArrayList<>();
-  ArrayList<Integer> snakeY = new ArrayList<>();
+    int foodX = 100;
+    int foodY = 100;
 
-  public void settings(){
-    size(600,400);
-  }
-  
-  public void setup(){
-    snakeX.add(300);
-    snakeY.add(200);
-    background(30, 30, 40);
-    noStroke();
-    frameRate(8);
-  }
+    ArrayList<Integer> snakeX = new ArrayList<>();
+    ArrayList<Integer> snakeY = new ArrayList<>();
 
-  //for scorirng system
-  public void drawScore(){
-    fill(0,255,0);
-    textSize(20);
-    text("Score : "+score , 20, 30);
-  }
-
-  //for wall collision
-  public void checkWallCollision(){
-    if (snakeX.get(0) < 0 ||
-        snakeX.get(0) + 30 > width ||
-        snakeY.get(0) < 0 ||
-        snakeY.get(0) + 30 > height) {
-
-        // Game Over
-        noLoop();
-    }
-  }
-  //draw the main features
-  public void draw() {
-    
-
-    background(30,30,40);//clear screen first
-    drawScore();//then score board
-    checkWallCollision();//check for the wall collision
-
-    // Move body
-    for(int i = snakeX.size() - 1; i > 0; i--){
-        snakeX.set(i, snakeX.get(i - 1));
-        snakeY.set(i, snakeY.get(i - 1));
+    public void settings() {
+        size(600, 400);
     }
 
-    // Move head
-    snakeX.set(0, snakeX.get(0) + xSpeed);
-    snakeY.set(0, snakeY.get(0) + ySpeed);
+    public void setup() {
+        snakeX.add(300);
+        snakeY.add(200);
 
-    // Draw snake
-    fill(255,0,0);
-
-    for(int i = 0; i < snakeX.size(); i++){
-        rect(snakeX.get(i), snakeY.get(i),30,30);
+        frameRate(5);
+        noStroke();
     }
 
-    // Draw food
-    fill(0,200,255);
-    ellipse(foodX,foodY,20,20);
+    public void draw() {
 
-    // Collision with food
-    if(snakeX.get(0) < foodX + 20 &&
-       snakeX.get(0) + 30 > foodX &&
-       snakeY.get(0) < foodY + 20 &&
-       snakeY.get(0) + 30 > foodY){
-        
-        //Increase score
-        score = score + 10;
+        background(30, 30, 40);
 
-        // Random food
-        foodX = (int)random(width - 20);
-        foodY = (int)random(height - 20);
+        moveSnake();
 
-        // Grow snake
-        snakeX.add(snakeX.get(snakeX.size()-1));
-        snakeY.add(snakeY.get(snakeY.size()-1));
+        checkFoodCollision();
+        checkWallCollision();
+        checkSelfCollision();
+
+        drawSnake();
+        drawFood();
+        drawScore();
+    }
+
+    // -----------------------------
+    // Snake Movement
+    // -----------------------------
+    public void moveSnake() {
+
+        for (int i = snakeX.size() - 1; i > 0; i--) {
+            snakeX.set(i, snakeX.get(i - 1));
+            snakeY.set(i, snakeY.get(i - 1));
+        }
+
+        snakeX.set(0, snakeX.get(0) + xSpeed);
+        snakeY.set(0, snakeY.get(0) + ySpeed);
+    }
+
+    // -----------------------------
+    // Draw Snake
+    // -----------------------------
+    public void drawSnake() {
+
+        fill(255, 0, 0);
+
+        for (int i = 0; i < snakeX.size(); i++) {
+            rect(snakeX.get(i), snakeY.get(i), cellSize, cellSize);
+        }
+    }
+
+    // -----------------------------
+    // Draw Food
+    // -----------------------------
+    public void drawFood() {
+
+        fill(0, 200, 255);
+        ellipse(foodX, foodY, cellSize, cellSize);
+    }
+
+    // -----------------------------
+    // Draw Score
+    // -----------------------------
+    public void drawScore() {
+
+        fill(0, 255, 0);
+        textSize(20);
+        text("Score : " + score, 20, 30);
+    }
+
+    // -----------------------------
+    // Food Collision
+    // -----------------------------
+    public void checkFoodCollision() {
+
+        if (snakeX.get(0) < foodX + cellSize &&
+                snakeX.get(0) + cellSize > foodX &&
+                snakeY.get(0) < foodY + cellSize &&
+                snakeY.get(0) + cellSize > foodY) {
+
+            score += 10;
+
+            // Generate food on the grid
+            foodX = (int) random(width / cellSize) * cellSize;
+            foodY = (int) random(height / cellSize) * cellSize;
+
+            // Grow snake
+            snakeX.add(snakeX.get(snakeX.size() - 1));
+            snakeY.add(snakeY.get(snakeY.size() - 1));
+        }
+    }
+
+    // -----------------------------
+    // Wall Collision
+    // -----------------------------
+    public void checkWallCollision() {
+
+        if (snakeX.get(0) < 0 ||
+                snakeX.get(0) + cellSize > width ||
+                snakeY.get(0) < 0 ||
+                snakeY.get(0) + cellSize > height) {
+
+            noLoop();
+        }
+    }
+
+    // -----------------------------
+    // Self Collision
+    // -----------------------------
+    public void checkSelfCollision() {
+
+        // A snake with only one body segment can't collide with itself
+        if (snakeX.size() < 3)
+            return;
+
+        for (int i = 1; i < snakeX.size(); i++) {
+
+            if (snakeX.get(0).equals(snakeX.get(i)) &&
+                    snakeY.get(0).equals(snakeY.get(i))) {
+
+                noLoop();
+            }
+        }
+    }
+
+    // -----------------------------
+    // Keyboard Controls
+    // -----------------------------
+    public void keyPressed() {
+
+        if (keyCode == RIGHT) {
+            xSpeed = cellSize;
+            ySpeed = 0;
+        }
+
+        if (keyCode == LEFT) {
+            xSpeed = -cellSize;
+            ySpeed = 0;
+        }
+
+        if (keyCode == UP) {
+            xSpeed = 0;
+            ySpeed = -cellSize;
+        }
+
+        if (keyCode == DOWN) {
+            xSpeed = 0;
+            ySpeed = cellSize;
+        }
+    }
+
+    public static void main(String[] args) {
+        PApplet.main("SnakeGame");
     }
 }
-  
-  public static void main(String[] args){
-      PApplet.main("SnakeGame");
-  }
-
-  
-  public void keyPressed(){
-    if(keyCode == RIGHT){
-      xSpeed = 10;
-      ySpeed = 0;
-    }
-    if(keyCode == LEFT){
-      xSpeed = -10;
-      ySpeed = 0;
-    }
-    if(keyCode == UP){
-      xSpeed = 0;
-      ySpeed = -10;
-    }
-    if(keyCode == DOWN){
-      xSpeed = 0;
-      ySpeed = 10;
-    }
-  }
-} 
