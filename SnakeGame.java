@@ -6,6 +6,7 @@ public class SnakeGame extends PApplet{
   //intial windows setup
   // int snakeX = 300;
   // int snakeY = 200;
+  int score = 0;
 
   int xSpeed = 0;
   int ySpeed = 0;
@@ -28,9 +29,18 @@ public class SnakeGame extends PApplet{
     frameRate(8);
   }
 
-  public void draw() {
+  //for scorirng system
+  public void drawScore(){
+    fill(0,255,0);
+    textSize(20);
+    text("Score : "+score , 20, 30);
+  }
 
-    background(30,30,40);
+  public void draw() {
+    
+
+    background(30,30,40);//clear screen first
+    drawScore();//then score board
 
     // Move body
     for(int i = snakeX.size() - 1; i > 0; i--){
@@ -58,6 +68,9 @@ public class SnakeGame extends PApplet{
        snakeX.get(0) + 30 > foodX &&
        snakeY.get(0) < foodY + 20 &&
        snakeY.get(0) + 30 > foodY){
+        
+        //Increase score
+        score = score + 10;
 
         // Random food
         foodX = (int)random(width - 20);
