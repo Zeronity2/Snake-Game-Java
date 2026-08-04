@@ -91,7 +91,7 @@ public class SnakeGame extends PApplet {
 
         fill(0, 255, 0);
         textSize(20);
-        text("Score : " + score, 20, 30);
+        text("Score : " + score, 40, 30);
     }
 
     // -----------------------------
@@ -153,16 +153,47 @@ public class SnakeGame extends PApplet {
     // Game Over
     // -----------------------------
     public void gameOverScreen(){
+            textAlign(CENTER,CENTER);
             fill(0,255,0);
-            textSize(20);
-            text("GAME OVER", width/2,height/2);
+            textSize(40);
+            text("GAME OVER", width/2,height/2-40);
             //textAlign(CENTER,CENTER);   
+
+            textSize(20);
+            text("Score : "+score, width/2, height/2);
+            text("Press R to Restart",width/2, height/2 + 40);
+    }
+
+    // -----------------------------
+    // Restart game
+    // -----------------------------
+    public void restartGame(){
+       gameOver = false;
+
+       score = 0;
+
+       snakeX.clear();
+       snakeY.clear();
+
+       snakeX.add(300);
+       snakeY.add(200);
+
+       xSpeed = 0;
+       ySpeed = 0;
+
+       foodX = (int)(random(width / cellSize)) * cellSize;
+       foodY = (int)(random(height / cellSize)) * cellSize;
     }
 
     // -----------------------------
     // Keyboard Controls
     // -----------------------------
     public void keyPressed() {
+
+        if(gameOver && (key == 'r' || key == 'R')){
+           restartGame();
+           return;
+        }
 
         if (keyCode == RIGHT) {
             xSpeed = cellSize;
@@ -183,6 +214,7 @@ public class SnakeGame extends PApplet {
             xSpeed = 0;
             ySpeed = cellSize;
         }
+
     }
 
     public static void main(String[] args) {
