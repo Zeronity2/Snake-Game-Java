@@ -7,6 +7,8 @@ public class SnakeGame extends PApplet {
     int cellSize = 15;
     int score = 0;
 
+    boolean gameOver = false;
+
     int xSpeed = 0;
     int ySpeed = 0;
 
@@ -31,7 +33,7 @@ public class SnakeGame extends PApplet {
     public void draw() {
 
         background(30, 30, 40);
-
+    if(!gameOver){
         moveSnake();
 
         checkFoodCollision();
@@ -40,6 +42,10 @@ public class SnakeGame extends PApplet {
 
         drawSnake();
         drawFood();
+    }else{
+        gameOverScreen();
+    } 
+
         drawScore();
     }
 
@@ -120,7 +126,7 @@ public class SnakeGame extends PApplet {
                 snakeY.get(0) < 0 ||
                 snakeY.get(0) + cellSize > height) {
 
-            noLoop();
+            gameOver = true;
         }
     }
 
@@ -138,9 +144,19 @@ public class SnakeGame extends PApplet {
             if (snakeX.get(0).equals(snakeX.get(i)) &&
                     snakeY.get(0).equals(snakeY.get(i))) {
 
-                noLoop();
+                gameOver = true;
             }
         }
+    }
+
+    // -----------------------------
+    // Game Over
+    // -----------------------------
+    public void gameOverScreen(){
+            fill(0,255,0);
+            textSize(20);
+            text("GAME OVER", width/2,height/2);
+            //textAlign(CENTER,CENTER);   
     }
 
     // -----------------------------
