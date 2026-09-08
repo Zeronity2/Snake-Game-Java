@@ -16,7 +16,6 @@ public class GameUI {
 
         app.textAlign(PApplet.CENTER, PApplet.CENTER);
 
-        // Title
         app.fill(0, 255, 0);
         app.textSize(60);
 
@@ -26,7 +25,6 @@ public class GameUI {
             75
         );
 
-        // Subtitle
         app.fill(200);
         app.textSize(18);
 
@@ -36,7 +34,6 @@ public class GameUI {
             125
         );
 
-        // Play button
         boolean hovering = isPlayButtonHovered(app);
 
         if (hovering) {
@@ -51,11 +48,10 @@ public class GameUI {
             185,
             200,
             55,
-            "▶  PLAY",
+            "PLAY",
             hovering
         );
 
-        // Controls
         app.fill(255);
         app.textSize(17);
 
@@ -80,7 +76,6 @@ public class GameUI {
             307
         );
 
-        // High score
         app.fill(255, 220, 80);
         app.textSize(18);
 
@@ -176,7 +171,8 @@ public class GameUI {
     public void drawScore(
             PApplet app,
             int score,
-            int highScore) {
+            int highScore,
+            int level) {
 
         // HUD background
         app.fill(20, 20, 28);
@@ -188,13 +184,14 @@ public class GameUI {
             45
         );
 
-        // Score
+
+        // SCORE
         app.textAlign(
             PApplet.LEFT,
             PApplet.CENTER
         );
 
-        app.textSize(18);
+        app.textSize(17);
 
         app.fill(255);
 
@@ -204,14 +201,24 @@ public class GameUI {
             23
         );
 
-        // High score
+
+        // HIGH SCORE
         app.text(
             "HIGH: " + highScore,
             150,
             23
         );
 
-        // Pause hint
+
+        // LEVEL
+        app.text(
+            "LEVEL: " + level,
+            290,
+            23
+        );
+
+
+        // PAUSE
         app.textAlign(
             PApplet.RIGHT,
             PApplet.CENTER
@@ -233,7 +240,6 @@ public class GameUI {
 
     public void drawGameBoard(PApplet app) {
 
-        // Board background
         app.fill(25, 25, 32);
 
         app.rect(
@@ -242,6 +248,7 @@ public class GameUI {
             app.width,
             app.height - 45
         );
+
 
         // Grid
         app.stroke(38, 38, 46);
@@ -266,6 +273,7 @@ public class GameUI {
                 y
             );
         }
+
 
         // Border
         app.stroke(80, 80, 90);
@@ -295,7 +303,6 @@ public class GameUI {
             PApplet.CENTER
         );
 
-        // Overlay
         app.fill(0, 0, 0, 150);
 
         app.rect(
@@ -305,7 +312,6 @@ public class GameUI {
             app.height - 45
         );
 
-        // Title
         app.fill(255);
         app.textSize(40);
 
@@ -315,7 +321,6 @@ public class GameUI {
             app.height / 2 - 30
         );
 
-        // Instruction
         app.fill(200);
         app.textSize(20);
 
@@ -344,10 +349,7 @@ public class GameUI {
         );
 
 
-        // -------------------------
-        // GAME OVER TITLE
-        // -------------------------
-
+        // GAME OVER
         app.fill(255, 80, 80);
         app.textSize(48);
 
@@ -358,10 +360,7 @@ public class GameUI {
         );
 
 
-        // -------------------------
         // SCORE CARD
-        // -------------------------
-
         app.fill(30, 30, 40);
 
         app.rectMode(PApplet.CENTER);
@@ -377,7 +376,7 @@ public class GameUI {
         app.rectMode(PApplet.CORNER);
 
 
-        // Score
+        // YOUR SCORE
         app.fill(200);
         app.textSize(16);
 
@@ -397,10 +396,7 @@ public class GameUI {
         );
 
 
-        // -------------------------
         // HIGH SCORE
-        // -------------------------
-
         app.fill(255, 220, 80);
         app.textSize(17);
 
@@ -411,10 +407,7 @@ public class GameUI {
         );
 
 
-        // -------------------------
-        // RESTART BUTTON
-        // -------------------------
-
+        // RESTART
         boolean restartHovering =
             isRestartButtonHovered(app);
 
@@ -429,10 +422,7 @@ public class GameUI {
         );
 
 
-        // -------------------------
-        // MENU BUTTON
-        // -------------------------
-
+        // MAIN MENU
         boolean menuHovering =
             isMenuButtonHovered(app);
 

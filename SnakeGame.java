@@ -7,6 +7,9 @@ public class SnakeGame extends PApplet {
     int score = 0;
     int highScore = 0;
 
+    int level = 1;
+    int gameSpeed = 5;
+
     GameState gameState = GameState.START;
 
     Snake snake;
@@ -41,7 +44,6 @@ public class SnakeGame extends PApplet {
             height
         );
 
-        // Generate food away from the snake
         food.generate(
             width,
             height,
@@ -50,7 +52,8 @@ public class SnakeGame extends PApplet {
 
         ui = new GameUI();
 
-        frameRate(5);
+        frameRate(gameSpeed);
+
         noStroke();
     }
 
@@ -83,6 +86,8 @@ public class SnakeGame extends PApplet {
 
         else if (gameState == GameState.PLAYING) {
 
+            updateLevel();
+
             snake.move();
 
             checkFoodCollision();
@@ -92,7 +97,8 @@ public class SnakeGame extends PApplet {
             ui.drawScore(
                 this,
                 score,
-                highScore
+                highScore,
+                level
             );
 
             ui.drawGameBoard(this);
@@ -111,7 +117,8 @@ public class SnakeGame extends PApplet {
             ui.drawScore(
                 this,
                 score,
-                highScore
+                highScore,
+                level
             );
 
             ui.drawGameBoard(this);
@@ -139,6 +146,25 @@ public class SnakeGame extends PApplet {
 
 
     // =========================
+    // UPDATE LEVEL
+    // =========================
+
+    public void updateLevel() {
+
+        level = (score / 50) + 1;
+
+        gameSpeed = 5 + (level - 1);
+
+        // Maximum speed
+        if (gameSpeed > 10) {
+            gameSpeed = 10;
+        }
+
+        frameRate(gameSpeed);
+    }
+
+
+    // =========================
     // FOOD COLLISION
     // =========================
 
@@ -151,19 +177,16 @@ public class SnakeGame extends PApplet {
 
             score += 10;
 
-            // Update high score
             if (score > highScore) {
                 highScore = score;
             }
 
-            // Generate new food away from snake
             food.generate(
                 width,
                 height,
                 snake
             );
 
-            // Grow snake
             snake.grow();
         }
     }
@@ -216,18 +239,22 @@ public class SnakeGame extends PApplet {
 
         score = 0;
 
+        level = 1;
+        gameSpeed = 5;
+
         snake = new Snake(
             300,
             200,
             cellSize
         );
 
-        // Generate food away from new snake
         food.generate(
             width,
             height,
             snake
         );
+
+        frameRate(gameSpeed);
 
         gameState = GameState.PLAYING;
     }
@@ -241,18 +268,22 @@ public class SnakeGame extends PApplet {
 
         score = 0;
 
+        level = 1;
+        gameSpeed = 5;
+
         snake = new Snake(
             300,
             200,
             cellSize
         );
 
-        // Generate food away from new snake
         food.generate(
             width,
             height,
             snake
         );
+
+        frameRate(gameSpeed);
 
         gameState = GameState.START;
     }
@@ -263,7 +294,6 @@ public class SnakeGame extends PApplet {
     // =========================
 
     public void keyPressed() {
-
 
         // START SCREEN → PLAY
         if (gameState == GameState.START &&
