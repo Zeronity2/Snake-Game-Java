@@ -519,4 +519,56 @@ public class GameUI {
 
         return isMenuButtonHovered(app);
     }
+
+    // =========================
+// LEVEL UP NOTIFICATION
+// =========================
+
+public void drawLevelUp(
+        PApplet app,
+        int level) {
+
+    app.textAlign(
+        PApplet.CENTER,
+        PApplet.CENTER
+    );
+
+    // Notification background
+    app.fill(20, 20, 28, 220);
+
+    app.rectMode(PApplet.CENTER);
+
+    app.rect(
+        app.width / 2,
+        app.height / 2 - 70,
+        220,
+        75,
+        15
+    );
+
+    app.rectMode(PApplet.CORNER);
+
+
+    // LEVEL UP
+    app.fill(0, 255, 120);
+    app.textSize(24);
+
+    app.text(
+        "LEVEL UP!",
+        app.width / 2,
+        app.height / 2 - 85
+    );
+
+
+    // Level number
+    app.fill(255);
+    app.textSize(20);
+
+    app.text(
+        "LEVEL " + level,
+        app.width / 2,
+        app.height / 2 - 55
+    );
 }
+}
+

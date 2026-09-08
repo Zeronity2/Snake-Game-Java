@@ -10,6 +10,10 @@ public class SnakeGame extends PApplet {
     int level = 1;
     int gameSpeed = 5;
 
+    // Level-up notification
+    boolean showLevelUp = false;
+    int levelUpTimer = 0;
+
     GameState gameState = GameState.START;
 
     Snake snake;
@@ -94,6 +98,8 @@ public class SnakeGame extends PApplet {
             checkWallCollision();
             checkSelfCollision();
 
+
+            // HUD
             ui.drawScore(
                 this,
                 score,
@@ -101,8 +107,27 @@ public class SnakeGame extends PApplet {
                 level
             );
 
+
+            // Game board
             ui.drawGameBoard(this);
 
+
+            // Level-up notification
+            if (showLevelUp) {
+
+                ui.drawLevelUp(
+                    this,
+                    level
+                );
+
+                if (millis() - levelUpTimer > 1500) {
+
+                    showLevelUp = false;
+                }
+            }
+
+
+            // Game objects
             snake.draw(this);
             food.draw(this);
         }
@@ -151,14 +176,30 @@ public class SnakeGame extends PApplet {
 
     public void updateLevel() {
 
-        level = (score / 50) + 1;
+        int newLevel = (score / 50) + 1;
 
+
+        // Detect level change
+        if (newLevel > level) {
+
+            level = newLevel;
+
+            showLevelUp = true;
+
+            levelUpTimer = millis();
+        }
+
+
+        // Increase speed with level
         gameSpeed = 5 + (level - 1);
+
 
         // Maximum speed
         if (gameSpeed > 10) {
+
             gameSpeed = 10;
         }
+
 
         frameRate(gameSpeed);
     }
@@ -177,16 +218,23 @@ public class SnakeGame extends PApplet {
 
             score += 10;
 
+
+            // Update high score
             if (score > highScore) {
+
                 highScore = score;
             }
 
+
+            // Generate new food
             food.generate(
                 width,
                 height,
                 snake
             );
 
+
+            // Grow snake
             snake.grow();
         }
     }
@@ -215,8 +263,10 @@ public class SnakeGame extends PApplet {
     public void checkSelfCollision() {
 
         if (snake.getSize() < 3) {
+
             return;
         }
+
 
         for (int i = 1; i < snake.getSize(); i++) {
 
@@ -240,7 +290,11 @@ public class SnakeGame extends PApplet {
         score = 0;
 
         level = 1;
+
         gameSpeed = 5;
+
+        showLevelUp = false;
+
 
         snake = new Snake(
             300,
@@ -248,11 +302,13 @@ public class SnakeGame extends PApplet {
             cellSize
         );
 
+
         food.generate(
             width,
             height,
             snake
         );
+
 
         frameRate(gameSpeed);
 
@@ -269,7 +325,11 @@ public class SnakeGame extends PApplet {
         score = 0;
 
         level = 1;
+
         gameSpeed = 5;
+
+        showLevelUp = false;
+
 
         snake = new Snake(
             300,
@@ -277,11 +337,13 @@ public class SnakeGame extends PApplet {
             cellSize
         );
 
+
         food.generate(
             width,
             height,
             snake
         );
+
 
         frameRate(gameSpeed);
 
@@ -294,6 +356,7 @@ public class SnakeGame extends PApplet {
     // =========================
 
     public void keyPressed() {
+
 
         // START SCREEN → PLAY
         if (gameState == GameState.START &&
@@ -325,6 +388,7 @@ public class SnakeGame extends PApplet {
                 return;
             }
 
+
             if (gameState == GameState.PAUSED) {
 
                 gameState = GameState.PLAYING;
@@ -345,6 +409,7 @@ public class SnakeGame extends PApplet {
                 );
             }
 
+
             if (keyCode == LEFT) {
 
                 snake.setDirection(
@@ -353,6 +418,7 @@ public class SnakeGame extends PApplet {
                 );
             }
 
+
             if (keyCode == UP) {
 
                 snake.setDirection(
@@ -360,6 +426,7 @@ public class SnakeGame extends PApplet {
                     -cellSize
                 );
             }
+
 
             if (keyCode == DOWN) {
 
@@ -378,6 +445,7 @@ public class SnakeGame extends PApplet {
 
     public void mousePressed() {
 
+
         // START SCREEN → PLAY
         if (gameState == GameState.START &&
                 ui.isPlayButtonClicked(this)) {
@@ -390,6 +458,7 @@ public class SnakeGame extends PApplet {
 
         // GAME OVER BUTTONS
         if (gameState == GameState.GAME_OVER) {
+
 
             // RESTART
             if (ui.isRestartButtonClicked(this)) {
