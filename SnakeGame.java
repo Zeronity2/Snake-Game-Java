@@ -10,7 +10,6 @@ public class SnakeGame extends PApplet {
     int level = 1;
     int gameSpeed = GameConfig.INITIAL_SPEED;
 
-    // Level-up notification
     boolean showLevelUp = false;
     int levelUpTimer = 0;
 
@@ -21,7 +20,10 @@ public class SnakeGame extends PApplet {
     GameUI ui;
 
     public void settings() {
-        size(GameConfig.WIDTH, GameConfig.HEIGHT);
+        size(
+            GameConfig.WIDTH,
+            GameConfig.HEIGHT
+        );
     }
 
     public void setup() {
@@ -31,9 +33,16 @@ public class SnakeGame extends PApplet {
             GameConfig.HEIGHT / 2
         );
 
-        food = new Food(width, height);
+        food = new Food(
+            width,
+            height
+        );
 
-        food.generate(width, height, snake);
+        food.generate(
+            width,
+            height,
+            snake
+        );
 
         ui = new GameUI();
 
@@ -47,7 +56,10 @@ public class SnakeGame extends PApplet {
 
         if (gameState == GameState.START) {
 
-            ui.drawStartScreen(this, highScore);
+            ui.drawStartScreen(
+                this,
+                highScore
+            );
 
         } else if (gameState == GameState.PLAYING) {
 
@@ -59,6 +71,7 @@ public class SnakeGame extends PApplet {
             checkWallCollision();
             checkSelfCollision();
 
+            // HUD
             ui.drawScore(
                 this,
                 score,
@@ -66,19 +79,29 @@ public class SnakeGame extends PApplet {
                 level
             );
 
+            // Game board
             ui.drawGameBoard(this);
 
+            // Level-up message
             if (showLevelUp) {
 
-                ui.drawLevelUp(this, level);
+                ui.drawLevelUp(
+                    this,
+                    level
+                );
 
                 if (millis() - levelUpTimer > 1500) {
                     showLevelUp = false;
                 }
             }
 
+            // Snake and food
             snake.draw(this);
             food.draw(this);
+
+            // IMPORTANT:
+            // Draw touch buttons LAST
+            ui.drawTouchControls(this);
 
         } else if (gameState == GameState.PAUSED) {
 
@@ -94,6 +117,9 @@ public class SnakeGame extends PApplet {
             snake.draw(this);
             food.draw(this);
 
+            // Keep controls visible while paused
+            ui.drawTouchControls(this);
+
             ui.drawPauseScreen(this);
 
         } else if (gameState == GameState.GAME_OVER) {
@@ -105,6 +131,10 @@ public class SnakeGame extends PApplet {
             );
         }
     }
+
+    // =========================
+    // LEVEL SYSTEM
+    // =========================
 
     public void updateLevel() {
 
@@ -129,6 +159,10 @@ public class SnakeGame extends PApplet {
         frameRate(gameSpeed);
     }
 
+    // =========================
+    // FOOD COLLISION
+    // =========================
+
     public void checkFoodCollision() {
 
         if (snake.getHeadX() < food.getX() + cellSize &&
@@ -142,22 +176,37 @@ public class SnakeGame extends PApplet {
                 highScore = score;
             }
 
-            food.generate(width, height, snake);
+            food.generate(
+                width,
+                height,
+                snake
+            );
 
             snake.grow();
         }
     }
 
+    // =========================
+    // WALL COLLISION
+    // =========================
+
     public void checkWallCollision() {
+
+        int playableBottom =
+            height - GameConfig.CONTROL_HEIGHT;
 
         if (snake.getHeadX() < 0 ||
                 snake.getHeadX() + cellSize > width ||
                 snake.getHeadY() < GameConfig.HUD_HEIGHT ||
-                snake.getHeadY() + cellSize > height) {
+                snake.getHeadY() + cellSize > playableBottom) {
 
             gameState = GameState.GAME_OVER;
         }
     }
+
+    // =========================
+    // SELF COLLISION
+    // =========================
 
     public void checkSelfCollision() {
 
@@ -176,6 +225,10 @@ public class SnakeGame extends PApplet {
         }
     }
 
+    // =========================
+    // RESTART
+    // =========================
+
     public void restartGame() {
 
         score = 0;
@@ -189,12 +242,20 @@ public class SnakeGame extends PApplet {
             GameConfig.HEIGHT / 2
         );
 
-        food.generate(width, height, snake);
+        food.generate(
+            width,
+            height,
+            snake
+        );
 
         frameRate(gameSpeed);
 
         gameState = GameState.PLAYING;
     }
+
+    // =========================
+    // MAIN MENU
+    // =========================
 
     public void goToMainMenu() {
 
@@ -209,12 +270,20 @@ public class SnakeGame extends PApplet {
             GameConfig.HEIGHT / 2
         );
 
-        food.generate(width, height, snake);
+        food.generate(
+            width,
+            height,
+            snake
+        );
 
         frameRate(gameSpeed);
 
         gameState = GameState.START;
     }
+
+    // =========================
+    // KEYBOARD CONTROLS
+    // =========================
 
     public void keyPressed() {
 
@@ -248,25 +317,42 @@ public class SnakeGame extends PApplet {
         if (gameState == GameState.PLAYING) {
 
             if (keyCode == RIGHT) {
-                snake.setDirection(cellSize, 0);
+                snake.setDirection(
+                    cellSize,
+                    0
+                );
             }
 
             if (keyCode == LEFT) {
-                snake.setDirection(-cellSize, 0);
+                snake.setDirection(
+                    -cellSize,
+                    0
+                );
             }
 
             if (keyCode == UP) {
-                snake.setDirection(0, -cellSize);
+                snake.setDirection(
+                    0,
+                    -cellSize
+                );
             }
 
             if (keyCode == DOWN) {
-                snake.setDirection(0, cellSize);
+                snake.setDirection(
+                    0,
+                    cellSize
+                );
             }
         }
     }
 
+    // =========================
+    // MOUSE / TOUCH CONTROLS
+    // =========================
+
     public void mousePressed() {
 
+        // PLAY button
         if (gameState == GameState.START &&
                 ui.isPlayButtonClicked(this)) {
 
@@ -274,6 +360,7 @@ public class SnakeGame extends PApplet {
             return;
         }
 
+        // GAME OVER buttons
         if (gameState == GameState.GAME_OVER) {
 
             if (ui.isRestartButtonClicked(this)) {
@@ -286,9 +373,54 @@ public class SnakeGame extends PApplet {
                 return;
             }
         }
+
+        // ON-SCREEN ARROW BUTTONS
+        if (gameState == GameState.PLAYING) {
+
+            int button =
+                ui.getControlButton(
+                    this,
+                    mouseX,
+                    mouseY
+                );
+
+            if (button == 1) {
+
+                // LEFT
+                snake.setDirection(
+                    -cellSize,
+                    0
+                );
+
+            } else if (button == 2) {
+
+                // UP
+                snake.setDirection(
+                    0,
+                    -cellSize
+                );
+
+            } else if (button == 3) {
+
+                // DOWN
+                snake.setDirection(
+                    0,
+                    cellSize
+                );
+
+            } else if (button == 4) {
+
+                // RIGHT
+                snake.setDirection(
+                    cellSize,
+                    0
+                );
+            }
+        }
     }
 
     public static void main(String[] args) {
+
         PApplet.main("SnakeGame");
     }
 }

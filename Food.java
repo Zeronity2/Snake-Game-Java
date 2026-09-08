@@ -7,6 +7,7 @@ public class Food {
     private int cellSize;
 
     public Food(int width, int height) {
+
         this.cellSize = GameConfig.CELL_SIZE;
 
         // Temporary initial position
@@ -20,7 +21,12 @@ public class Food {
         int maxX = width - cellSize * 2;
 
         int minY = GameConfig.HUD_HEIGHT + cellSize;
-        int maxY = height - cellSize * 2;
+
+        int playableBottom =
+            height - GameConfig.CONTROL_HEIGHT;
+
+        int maxY =
+            playableBottom - cellSize;
 
         int columns =
             (maxX - minX) / cellSize + 1;
