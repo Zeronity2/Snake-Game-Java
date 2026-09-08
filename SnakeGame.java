@@ -1,223 +1,334 @@
-import java.util.ArrayList;
 import processing.core.PApplet;
 
 public class SnakeGame extends PApplet {
 
-    // Game settings
     int cellSize = 15;
+
     int score = 0;
+    int highScore = 0;
 
-    boolean gameOver = false;
+    GameState gameState = GameState.START;
 
-    int xSpeed = 0;
-    int ySpeed = 0;
+    Snake snake;
+    Food food;
+    GameUI ui;
 
-    int foodX = 100;
-    int foodY = 100;
 
-    ArrayList<Integer> snakeX = new ArrayList<>();
-    ArrayList<Integer> snakeY = new ArrayList<>();
+    // =========================
+    // WINDOW SETTINGS
+    // =========================
 
     public void settings() {
         size(600, 400);
     }
 
+
+    // =========================
+    // SETUP
+    // =========================
+
     public void setup() {
-        snakeX.add(300);
-        snakeY.add(200);
+
+        snake = new Snake(
+            300,
+            200,
+            cellSize
+        );
+
+        food = new Food(
+            cellSize,
+            width,
+            height
+        );
+
+        ui = new GameUI();
 
         frameRate(5);
         noStroke();
     }
 
+
+    // =========================
+    // DRAW
+    // =========================
+
     public void draw() {
 
         background(30, 30, 40);
-    if(!gameOver){
-        moveSnake();
 
-        checkFoodCollision();
-        checkWallCollision();
-        checkSelfCollision();
 
-        drawSnake();
-        drawFood();
-    }else{
-        gameOverScreen();
-    } 
+        // =========================
+        // START SCREEN
+        // =========================
 
-        drawScore();
-    }
+        if (gameState == GameState.START) {
 
-    // -----------------------------
-    // Snake Movement
-    // -----------------------------
-    public void moveSnake() {
-
-        for (int i = snakeX.size() - 1; i > 0; i--) {
-            snakeX.set(i, snakeX.get(i - 1));
-            snakeY.set(i, snakeY.get(i - 1));
+            ui.drawStartScreen(
+                this,
+                highScore
+            );
         }
 
-        snakeX.set(0, snakeX.get(0) + xSpeed);
-        snakeY.set(0, snakeY.get(0) + ySpeed);
-    }
 
-    // -----------------------------
-    // Draw Snake
-    // -----------------------------
-    public void drawSnake() {
+        // =========================
+        // PLAYING
+        // =========================
 
-        fill(255, 0, 0);
+        else if (gameState == GameState.PLAYING) {
 
-        for (int i = 0; i < snakeX.size(); i++) {
-            rect(snakeX.get(i), snakeY.get(i), cellSize, cellSize);
+            snake.move();
+
+            checkFoodCollision();
+            checkWallCollision();
+            checkSelfCollision();
+
+            // Draw UI first
+            ui.drawScore(
+                this,
+                score,
+                highScore
+            );
+
+            ui.drawGameBoard(this);
+
+            // Draw game objects
+            snake.draw(this);
+            food.draw(this);
+        }
+
+
+        // =========================
+        // PAUSED
+        // =========================
+
+        else if (gameState == GameState.PAUSED) {
+
+            ui.drawScore(
+                this,
+                score,
+                highScore
+            );
+
+            ui.drawGameBoard(this);
+
+            snake.draw(this);
+            food.draw(this);
+
+            ui.drawPauseScreen(this);
+        }
+
+
+        // =========================
+        // GAME OVER
+        // =========================
+
+        else if (gameState == GameState.GAME_OVER) {
+
+            ui.drawGameOverScreen(
+                this,
+                score,
+                highScore
+            );
         }
     }
 
-    // -----------------------------
-    // Draw Food
-    // -----------------------------
-    public void drawFood() {
 
-        fill(0, 200, 255);
-        ellipse(foodX, foodY, cellSize, cellSize);
-    }
+    // =========================
+    // FOOD COLLISION
+    // =========================
 
-    // -----------------------------
-    // Draw Score
-    // -----------------------------
-    public void drawScore() {
-
-        fill(0, 255, 0);
-        textSize(20);
-        text("Score : " + score, 40, 30);
-    }
-
-    // -----------------------------
-    // Food Collision
-    // -----------------------------
     public void checkFoodCollision() {
 
-        if (snakeX.get(0) < foodX + cellSize &&
-                snakeX.get(0) + cellSize > foodX &&
-                snakeY.get(0) < foodY + cellSize &&
-                snakeY.get(0) + cellSize > foodY) {
+        if (snake.getHeadX() < food.getX() + cellSize &&
+                snake.getHeadX() + cellSize > food.getX() &&
+                snake.getHeadY() < food.getY() + cellSize &&
+                snake.getHeadY() + cellSize > food.getY()) {
 
             score += 10;
 
-            // Generate food on the grid
-            foodX = (int) random(width / cellSize) * cellSize;
-            foodY = (int) random(height / cellSize) * cellSize;
+            // Update high score
+            if (score > highScore) {
+                highScore = score;
+            }
+
+            // Generate new food
+            food.generate(
+                width,
+                height
+            );
 
             // Grow snake
-            snakeX.add(snakeX.get(snakeX.size() - 1));
-            snakeY.add(snakeY.get(snakeY.size() - 1));
+            snake.grow();
         }
     }
 
-    // -----------------------------
-    // Wall Collision
-    // -----------------------------
+
+    // =========================
+    // WALL COLLISION
+    // =========================
+
     public void checkWallCollision() {
 
-        if (snakeX.get(0) < 0 ||
-                snakeX.get(0) + cellSize > width ||
-                snakeY.get(0) < 0 ||
-                snakeY.get(0) + cellSize > height) {
+        if (snake.getHeadX() < 0 ||
+                snake.getHeadX() + cellSize > width ||
+                snake.getHeadY() < 45 ||
+                snake.getHeadY() + cellSize > height) {
 
-            gameOver = true;
+            gameState = GameState.GAME_OVER;
         }
     }
 
-    // -----------------------------
-    // Self Collision
-    // -----------------------------
+
+    // =========================
+    // SELF COLLISION
+    // =========================
+
     public void checkSelfCollision() {
 
-        // A snake with only one body segment can't collide with itself
-        if (snakeX.size() < 3)
+        if (snake.getSize() < 3) {
             return;
+        }
 
-        for (int i = 1; i < snakeX.size(); i++) {
+        for (int i = 1; i < snake.getSize(); i++) {
 
-            if (snakeX.get(0).equals(snakeX.get(i)) &&
-                    snakeY.get(0).equals(snakeY.get(i))) {
+            if (snake.getHeadX() == snake.getX(i) &&
+                    snake.getHeadY() == snake.getY(i)) {
 
-                gameOver = true;
+                gameState = GameState.GAME_OVER;
+
+                return;
             }
         }
     }
 
-    // -----------------------------
-    // Game Over
-    // -----------------------------
-    public void gameOverScreen(){
-            textAlign(CENTER,CENTER);
-            fill(0,255,0);
-            textSize(40);
-            text("GAME OVER", width/2,height/2-40);
-            //textAlign(CENTER,CENTER);   
 
-            textSize(20);
-            text("Score : "+score, width/2, height/2);
-            text("Press R to Restart",width/2, height/2 + 40);
+    // =========================
+    // RESTART GAME
+    // =========================
+
+    public void restartGame() {
+
+        score = 0;
+
+        snake = new Snake(
+            300,
+            200,
+            cellSize
+        );
+
+        food.generate(
+            width,
+            height
+        );
+
+        gameState = GameState.PLAYING;
     }
 
-    // -----------------------------
-    // Restart game
-    // -----------------------------
-    public void restartGame(){
-       gameOver = false;
 
-       score = 0;
+    // =========================
+    // KEYBOARD CONTROLS
+    // =========================
 
-       snakeX.clear();
-       snakeY.clear();
-
-       snakeX.add(300);
-       snakeY.add(200);
-
-       xSpeed = 0;
-       ySpeed = 0;
-
-       foodX = (int)(random(width / cellSize)) * cellSize;
-       foodY = (int)(random(height / cellSize)) * cellSize;
-    }
-
-    // -----------------------------
-    // Keyboard Controls
-    // -----------------------------
     public void keyPressed() {
 
-        if(gameOver && (key == 'r' || key == 'R')){
-           restartGame();
-           return;
+
+        // START SCREEN
+        if (gameState == GameState.START &&
+                keyCode == ENTER) {
+
+            gameState = GameState.PLAYING;
+
+            return;
         }
 
-        if (keyCode == RIGHT) {
-            xSpeed = cellSize;
-            ySpeed = 0;
+
+        // GAME OVER → RESTART
+        if (gameState == GameState.GAME_OVER &&
+                (key == 'r' || key == 'R')) {
+
+            restartGame();
+
+            return;
         }
 
-        if (keyCode == LEFT) {
-            xSpeed = -cellSize;
-            ySpeed = 0;
+
+        // PAUSE / RESUME
+        if (key == 'p' || key == 'P') {
+
+            if (gameState == GameState.PLAYING) {
+
+                gameState = GameState.PAUSED;
+
+                return;
+            }
+
+            if (gameState == GameState.PAUSED) {
+
+                gameState = GameState.PLAYING;
+
+                return;
+            }
         }
 
-        if (keyCode == UP) {
-            xSpeed = 0;
-            ySpeed = -cellSize;
-        }
 
-        if (keyCode == DOWN) {
-            xSpeed = 0;
-            ySpeed = cellSize;
-        }
+        // MOVEMENT
+        if (gameState == GameState.PLAYING) {
 
+            if (keyCode == RIGHT) {
+
+                snake.setDirection(
+                    cellSize,
+                    0
+                );
+            }
+
+            if (keyCode == LEFT) {
+
+                snake.setDirection(
+                    -cellSize,
+                    0
+                );
+            }
+
+            if (keyCode == UP) {
+
+                snake.setDirection(
+                    0,
+                    -cellSize
+                );
+            }
+
+            if (keyCode == DOWN) {
+
+                snake.setDirection(
+                    0,
+                    cellSize
+                );
+            }
+        }
     }
 
+
+    // =========================
+    // MOUSE CONTROLS
+    // =========================
+
+    public void mousePressed() {
+
+        if (gameState == GameState.START &&
+                ui.isPlayButtonClicked(this)) {
+
+            gameState = GameState.PLAYING;
+        }
+    }
+
+
+    // =========================
+    // MAIN
+    // =========================
+
     public static void main(String[] args) {
+
         PApplet.main("SnakeGame");
     }
 }
