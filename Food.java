@@ -8,19 +8,24 @@ public class Food {
 
     public Food(int width, int height) {
 
-        this.cellSize = GameConfig.CELL_SIZE;
+        cellSize = GameConfig.CELL_SIZE;
 
-        // Temporary initial position
         x = cellSize;
         y = GameConfig.HUD_HEIGHT + cellSize;
     }
 
-    public void generate(int width, int height, Snake snake) {
+    public void generate(
+            int width,
+            int height,
+            Snake snake) {
 
         int minX = cellSize;
-        int maxX = width - cellSize * 2;
 
-        int minY = GameConfig.HUD_HEIGHT + cellSize;
+        int maxX =
+            width - cellSize * 2;
+
+        int minY =
+            GameConfig.HUD_HEIGHT + cellSize;
 
         int playableBottom =
             height - GameConfig.CONTROL_HEIGHT;
@@ -36,11 +41,13 @@ public class Food {
 
         do {
 
-            x = minX +
+            x =
+                minX +
                 (int) (Math.random() * columns)
                 * cellSize;
 
-            y = minY +
+            y =
+                minY +
                 (int) (Math.random() * rows)
                 * cellSize;
 
@@ -49,7 +56,9 @@ public class Food {
 
     private boolean isOnSnake(Snake snake) {
 
-        for (int i = 0; i < snake.getSize(); i++) {
+        for (int i = 0;
+             i < snake.getSize();
+             i++) {
 
             if (x == snake.getX(i) &&
                     y == snake.getY(i)) {

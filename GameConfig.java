@@ -7,7 +7,7 @@ public class GameConfig {
 
     public static final int HUD_HEIGHT = 45;
 
-    public static final int CONTROL_HEIGHT = 80;
+    public static final int CONTROL_HEIGHT = 110;
 
     public static final int INITIAL_SPEED = 5;
     public static final int MAX_SPEED = 10;

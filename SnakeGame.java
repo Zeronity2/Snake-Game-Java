@@ -20,6 +20,7 @@ public class SnakeGame extends PApplet {
     GameUI ui;
 
     public void settings() {
+
         size(
             GameConfig.WIDTH,
             GameConfig.HEIGHT
@@ -71,7 +72,6 @@ public class SnakeGame extends PApplet {
             checkWallCollision();
             checkSelfCollision();
 
-            // HUD
             ui.drawScore(
                 this,
                 score,
@@ -79,10 +79,8 @@ public class SnakeGame extends PApplet {
                 level
             );
 
-            // Game board
             ui.drawGameBoard(this);
 
-            // Level-up message
             if (showLevelUp) {
 
                 ui.drawLevelUp(
@@ -95,12 +93,10 @@ public class SnakeGame extends PApplet {
                 }
             }
 
-            // Snake and food
             snake.draw(this);
             food.draw(this);
 
-            // IMPORTANT:
-            // Draw touch buttons LAST
+            // Draw controls LAST
             ui.drawTouchControls(this);
 
         } else if (gameState == GameState.PAUSED) {
@@ -117,7 +113,6 @@ public class SnakeGame extends PApplet {
             snake.draw(this);
             food.draw(this);
 
-            // Keep controls visible while paused
             ui.drawTouchControls(this);
 
             ui.drawPauseScreen(this);
@@ -352,7 +347,6 @@ public class SnakeGame extends PApplet {
 
     public void mousePressed() {
 
-        // PLAY button
         if (gameState == GameState.START &&
                 ui.isPlayButtonClicked(this)) {
 
@@ -360,7 +354,6 @@ public class SnakeGame extends PApplet {
             return;
         }
 
-        // GAME OVER buttons
         if (gameState == GameState.GAME_OVER) {
 
             if (ui.isRestartButtonClicked(this)) {
@@ -374,7 +367,6 @@ public class SnakeGame extends PApplet {
             }
         }
 
-        // ON-SCREEN ARROW BUTTONS
         if (gameState == GameState.PLAYING) {
 
             int button =

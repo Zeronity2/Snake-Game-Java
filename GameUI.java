@@ -9,20 +9,40 @@ public class GameUI {
     // START SCREEN
     // =========================
 
-    public void drawStartScreen(PApplet app, int highScore) {
+    public void drawStartScreen(
+            PApplet app,
+            int highScore) {
 
         app.background(backgroundColor);
-        app.textAlign(PApplet.CENTER, PApplet.CENTER);
 
-        float centerX = app.width / 2.0f;
+        app.textAlign(
+            PApplet.CENTER,
+            PApplet.CENTER
+        );
 
-        float titleY = app.height * 0.19f;
-        float subtitleY = app.height * 0.31f;
-        float playButtonY = app.height * 0.46f;
-        float controlsTitleY = app.height * 0.65f;
-        float moveControlsY = app.height * 0.71f;
-        float pauseControlsY = app.height * 0.77f;
-        float highScoreY = app.height * 0.89f;
+        float centerX =
+            app.width / 2.0f;
+
+        float titleY =
+            app.height * 0.19f;
+
+        float subtitleY =
+            app.height * 0.31f;
+
+        float playButtonY =
+            app.height * 0.46f;
+
+        float controlsTitleY =
+            app.height * 0.65f;
+
+        float moveControlsY =
+            app.height * 0.71f;
+
+        float pauseControlsY =
+            app.height * 0.77f;
+
+        float highScoreY =
+            app.height * 0.89f;
 
         app.fill(0, 255, 0);
         app.textSize(60);
@@ -42,7 +62,8 @@ public class GameUI {
             subtitleY
         );
 
-        boolean hovering = isPlayButtonHovered(app);
+        boolean hovering =
+            isPlayButtonHovered(app);
 
         if (hovering) {
             app.cursor(PApplet.HAND);
@@ -145,7 +166,8 @@ public class GameUI {
     // PLAY BUTTON
     // =========================
 
-    public boolean isPlayButtonHovered(PApplet app) {
+    public boolean isPlayButtonHovered(
+            PApplet app) {
 
         float buttonX =
             app.width / 2.0f;
@@ -166,7 +188,9 @@ public class GameUI {
                     buttonY + buttonHeight / 2;
     }
 
-    public boolean isPlayButtonClicked(PApplet app) {
+    public boolean isPlayButtonClicked(
+            PApplet app) {
+
         return isPlayButtonHovered(app);
     }
 
@@ -245,7 +269,8 @@ public class GameUI {
             0,
             GameConfig.HUD_HEIGHT,
             app.width,
-            boardBottom - GameConfig.HUD_HEIGHT
+            boardBottom -
+            GameConfig.HUD_HEIGHT
         );
 
         app.stroke(38, 38, 46);
@@ -279,6 +304,7 @@ public class GameUI {
             );
         }
 
+        // Game border
         app.stroke(80, 80, 90);
         app.strokeWeight(2);
         app.noFill();
@@ -287,22 +313,25 @@ public class GameUI {
             1,
             GameConfig.HUD_HEIGHT,
             app.width - 2,
-            boardBottom - GameConfig.HUD_HEIGHT
+            boardBottom -
+            GameConfig.HUD_HEIGHT
         );
 
         app.noStroke();
     }
 
     // =========================
-    // TOUCH CONTROLS
+    // MOBILE D-PAD
     // =========================
 
-    public void drawTouchControls(PApplet app) {
+    public void drawTouchControls(
+            PApplet app) {
 
         int controlTop =
-            app.height - GameConfig.CONTROL_HEIGHT;
+            app.height -
+            GameConfig.CONTROL_HEIGHT;
 
-        // Control area
+        // Control background
         app.fill(35, 15, 15);
 
         app.rect(
@@ -325,31 +354,39 @@ public class GameUI {
 
         app.noStroke();
 
+        float centerX =
+            app.width / 2.0f;
+
         float buttonSize = 55;
-        float gap = 12;
 
-        float totalWidth =
-            buttonSize * 4 + gap * 3;
+        float gap = 8;
 
-        float startX =
-            (app.width - totalWidth) / 2.0f;
-
+        // D-pad positions
         float centerY =
             controlTop +
-            GameConfig.CONTROL_HEIGHT / 2.0f;
+            GameConfig.CONTROL_HEIGHT * 0.62f;
+
+        float upY =
+            centerY - buttonSize - gap;
 
         float leftX =
-            startX + buttonSize / 2.0f;
-
-        float upX =
-            leftX + buttonSize + gap;
-
-        float downX =
-            upX + buttonSize + gap;
+            centerX - buttonSize - gap;
 
         float rightX =
-            downX + buttonSize + gap;
+            centerX + buttonSize + gap;
 
+        float downY =
+            centerY;
+
+        // UP
+        drawControlButton(
+            app,
+            centerX,
+            upY,
+            "UP"
+        );
+
+        // LEFT
         drawControlButton(
             app,
             leftX,
@@ -357,20 +394,15 @@ public class GameUI {
             "LEFT"
         );
 
+        // DOWN
         drawControlButton(
             app,
-            upX,
-            centerY,
-            "UP"
-        );
-
-        drawControlButton(
-            app,
-            downX,
-            centerY,
+            centerX,
+            downY,
             "DOWN"
         );
 
+        // RIGHT
         drawControlButton(
             app,
             rightX,
@@ -380,7 +412,7 @@ public class GameUI {
     }
 
     // =========================
-    // CONTROL BUTTON
+    // D-PAD BUTTON
     // =========================
 
     private void drawControlButton(
@@ -402,7 +434,7 @@ public class GameUI {
             10
         );
 
-        // Bright red border
+        // Red border
         app.stroke(255, 70, 70);
         app.strokeWeight(2);
 
@@ -418,7 +450,7 @@ public class GameUI {
 
         app.noStroke();
 
-        // Button text
+        // Label
         app.fill(255);
 
         app.textAlign(
@@ -426,7 +458,7 @@ public class GameUI {
             PApplet.CENTER
         );
 
-        app.textSize(13);
+        app.textSize(12);
 
         app.text(
             label,
@@ -438,7 +470,7 @@ public class GameUI {
     }
 
     // =========================
-    // TOUCH BUTTON DETECTION
+    // D-PAD DETECTION
     // =========================
 
     public int getControlButton(
@@ -447,33 +479,33 @@ public class GameUI {
             float y) {
 
         int controlTop =
-            app.height - GameConfig.CONTROL_HEIGHT;
+            app.height -
+            GameConfig.CONTROL_HEIGHT;
+
+        float centerX =
+            app.width / 2.0f;
 
         float buttonSize = 55;
-        float gap = 12;
 
-        float totalWidth =
-            buttonSize * 4 + gap * 3;
-
-        float startX =
-            (app.width - totalWidth) / 2.0f;
+        float gap = 8;
 
         float centerY =
             controlTop +
-            GameConfig.CONTROL_HEIGHT / 2.0f;
+            GameConfig.CONTROL_HEIGHT * 0.62f;
+
+        float upY =
+            centerY - buttonSize - gap;
 
         float leftX =
-            startX + buttonSize / 2.0f;
-
-        float upX =
-            leftX + buttonSize + gap;
-
-        float downX =
-            upX + buttonSize + gap;
+            centerX - buttonSize - gap;
 
         float rightX =
-            downX + buttonSize + gap;
+            centerX + buttonSize + gap;
 
+        float downY =
+            centerY;
+
+        // LEFT
         if (isInsideButton(
                 x,
                 y,
@@ -484,26 +516,29 @@ public class GameUI {
             return 1;
         }
 
+        // UP
         if (isInsideButton(
                 x,
                 y,
-                upX,
-                centerY,
+                centerX,
+                upY,
                 buttonSize)) {
 
             return 2;
         }
 
+        // DOWN
         if (isInsideButton(
                 x,
                 y,
-                downX,
-                centerY,
+                centerX,
+                downY,
                 buttonSize)) {
 
             return 3;
         }
 
+        // RIGHT
         if (isInsideButton(
                 x,
                 y,
@@ -538,7 +573,8 @@ public class GameUI {
     // PAUSE SCREEN
     // =========================
 
-    public void drawPauseScreen(PApplet app) {
+    public void drawPauseScreen(
+            PApplet app) {
 
         app.textAlign(
             PApplet.CENTER,
@@ -765,7 +801,8 @@ public class GameUI {
     // RESTART BUTTON
     // =========================
 
-    public boolean isRestartButtonHovered(PApplet app) {
+    public boolean isRestartButtonHovered(
+            PApplet app) {
 
         float buttonX =
             app.width / 2.0f;
@@ -786,7 +823,9 @@ public class GameUI {
                     buttonY + buttonHeight / 2;
     }
 
-    public boolean isRestartButtonClicked(PApplet app) {
+    public boolean isRestartButtonClicked(
+            PApplet app) {
+
         return isRestartButtonHovered(app);
     }
 
@@ -794,7 +833,8 @@ public class GameUI {
     // MAIN MENU BUTTON
     // =========================
 
-    public boolean isMenuButtonHovered(PApplet app) {
+    public boolean isMenuButtonHovered(
+            PApplet app) {
 
         float buttonX =
             app.width / 2.0f;
@@ -815,7 +855,9 @@ public class GameUI {
                     buttonY + buttonHeight / 2;
     }
 
-    public boolean isMenuButtonClicked(PApplet app) {
+    public boolean isMenuButtonClicked(
+            PApplet app) {
+
         return isMenuButtonHovered(app);
     }
 }
