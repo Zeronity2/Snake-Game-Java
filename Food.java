@@ -15,7 +15,9 @@ public class Food {
 
         this.cellSize = cellSize;
 
-        generate(width, height);
+        // Temporary initial position
+        x = cellSize;
+        y = 60;
     }
 
 
@@ -23,19 +25,56 @@ public class Food {
     // GENERATE FOOD
     // =========================
 
-    public void generate(int width, int height) {
+    public void generate(
+            int width,
+            int height,
+            Snake snake) {
 
         int topOffset = 45;
 
-        x = (int) (Math.random() * (width / cellSize))
+        // Keep food one cell inside the game border
+        int minX = cellSize;
+        int maxX = width - cellSize * 2;
+
+        int minY = topOffset + cellSize;
+        int maxY = height - cellSize * 2;
+
+        int columns =
+            (maxX - minX) / cellSize + 1;
+
+        int rows =
+            (maxY - minY) / cellSize + 1;
+
+        do {
+
+            x = minX +
+                (int) (Math.random() * columns)
                 * cellSize;
 
-        int availableHeight = height - topOffset;
+            y = minY +
+                (int) (Math.random() * rows)
+                * cellSize;
 
-        y = topOffset +
-            (int) (Math.random() *
-            (availableHeight / cellSize))
-            * cellSize;
+        } while (isOnSnake(snake));
+    }
+
+
+    // =========================
+    // CHECK SNAKE COLLISION
+    // =========================
+
+    private boolean isOnSnake(Snake snake) {
+
+        for (int i = 0; i < snake.getSize(); i++) {
+
+            if (x == snake.getX(i) &&
+                    y == snake.getY(i)) {
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

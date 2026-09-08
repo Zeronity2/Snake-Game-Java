@@ -41,6 +41,13 @@ public class SnakeGame extends PApplet {
             height
         );
 
+        // Generate food away from the snake
+        food.generate(
+            width,
+            height,
+            snake
+        );
+
         ui = new GameUI();
 
         frameRate(5);
@@ -144,15 +151,19 @@ public class SnakeGame extends PApplet {
 
             score += 10;
 
+            // Update high score
             if (score > highScore) {
                 highScore = score;
             }
 
+            // Generate new food away from snake
             food.generate(
                 width,
-                height
+                height,
+                snake
             );
 
+            // Grow snake
             snake.grow();
         }
     }
@@ -211,9 +222,11 @@ public class SnakeGame extends PApplet {
             cellSize
         );
 
+        // Generate food away from new snake
         food.generate(
             width,
-            height
+            height,
+            snake
         );
 
         gameState = GameState.PLAYING;
@@ -221,7 +234,7 @@ public class SnakeGame extends PApplet {
 
 
     // =========================
-    // RETURN TO MENU
+    // RETURN TO MAIN MENU
     // =========================
 
     public void goToMainMenu() {
@@ -234,9 +247,11 @@ public class SnakeGame extends PApplet {
             cellSize
         );
 
+        // Generate food away from new snake
         food.generate(
             width,
-            height
+            height,
+            snake
         );
 
         gameState = GameState.START;
@@ -250,7 +265,7 @@ public class SnakeGame extends PApplet {
     public void keyPressed() {
 
 
-        // START SCREEN
+        // START SCREEN → PLAY
         if (gameState == GameState.START &&
                 keyCode == ENTER) {
 
@@ -333,7 +348,6 @@ public class SnakeGame extends PApplet {
 
     public void mousePressed() {
 
-
         // START SCREEN → PLAY
         if (gameState == GameState.START &&
                 ui.isPlayButtonClicked(this)) {
@@ -346,7 +360,6 @@ public class SnakeGame extends PApplet {
 
         // GAME OVER BUTTONS
         if (gameState == GameState.GAME_OVER) {
-
 
             // RESTART
             if (ui.isRestartButtonClicked(this)) {

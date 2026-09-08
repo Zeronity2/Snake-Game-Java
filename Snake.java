@@ -200,13 +200,20 @@ public class Snake {
     // SET DIRECTION
     // =========================
 
-    public void setDirection(
-            int xSpeed,
-            int ySpeed) {
+    public void setDirection(int newXSpeed, int newYSpeed) {
 
-        this.xSpeed = xSpeed;
-        this.ySpeed = ySpeed;
+    // Prevent reversing directly into the snake's body
+    if (xSpeed != 0 && newXSpeed == -xSpeed) {
+        return;
     }
+
+    if (ySpeed != 0 && newYSpeed == -ySpeed) {
+        return;
+    }
+
+    xSpeed = newXSpeed;
+    ySpeed = newYSpeed;
+}
 
 
     // =========================
