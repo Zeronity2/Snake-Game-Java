@@ -11,61 +11,30 @@ public class Snake {
     private int xSpeed = 0;
     private int ySpeed = 0;
 
-
-    // =========================
-    // CONSTRUCTOR
-    // =========================
-
-    public Snake(int startX, int startY, int cellSize) {
-
-        this.cellSize = cellSize;
+    public Snake(int startX, int startY) {
+        this.cellSize = GameConfig.CELL_SIZE;
 
         snakeX.add(startX);
         snakeY.add(startY);
     }
 
-
-    // =========================
-    // MOVE
-    // =========================
-
     public void move() {
 
         for (int i = snakeX.size() - 1; i > 0; i--) {
-
-            snakeX.set(
-                i,
-                snakeX.get(i - 1)
-            );
-
-            snakeY.set(
-                i,
-                snakeY.get(i - 1)
-            );
+            snakeX.set(i, snakeX.get(i - 1));
+            snakeY.set(i, snakeY.get(i - 1));
         }
 
-        snakeX.set(
-            0,
-            snakeX.get(0) + xSpeed
-        );
-
-        snakeY.set(
-            0,
-            snakeY.get(0) + ySpeed
-        );
+        snakeX.set(0, snakeX.get(0) + xSpeed);
+        snakeY.set(0, snakeY.get(0) + ySpeed);
     }
-
-
-    // =========================
-    // DRAW SNAKE
-    // =========================
 
     public void draw(PApplet app) {
 
         for (int i = snakeX.size() - 1; i >= 0; i--) {
 
-            // Head
             if (i == 0) {
+
                 app.fill(0, 230, 120);
 
                 app.rect(
@@ -75,10 +44,8 @@ public class Snake {
                     cellSize - 2,
                     5
                 );
-            }
 
-            // Body
-            else {
+            } else {
 
                 app.fill(0, 180, 90);
 
@@ -95,18 +62,12 @@ public class Snake {
         drawEyes(app);
     }
 
-
-    // =========================
-    // DRAW EYES
-    // =========================
-
     private void drawEyes(PApplet app) {
 
         app.fill(255);
 
         float eyeSize = 3;
 
-        // Moving right
         if (xSpeed > 0) {
 
             app.ellipse(
@@ -122,10 +83,8 @@ public class Snake {
                 eyeSize,
                 eyeSize
             );
-        }
 
-        // Moving left
-        else if (xSpeed < 0) {
+        } else if (xSpeed < 0) {
 
             app.ellipse(
                 snakeX.get(0) + 4,
@@ -140,10 +99,8 @@ public class Snake {
                 eyeSize,
                 eyeSize
             );
-        }
 
-        // Moving up
-        else if (ySpeed < 0) {
+        } else if (ySpeed < 0) {
 
             app.ellipse(
                 snakeX.get(0) + 4,
@@ -158,10 +115,8 @@ public class Snake {
                 eyeSize,
                 eyeSize
             );
-        }
 
-        // Moving down
-        else if (ySpeed > 0) {
+        } else if (ySpeed > 0) {
 
             app.ellipse(
                 snakeX.get(0) + 4,
@@ -178,47 +133,26 @@ public class Snake {
             );
         }
     }
-
-
-    // =========================
-    // GROW
-    // =========================
 
     public void grow() {
 
-        snakeX.add(
-            snakeX.get(snakeX.size() - 1)
-        );
-
-        snakeY.add(
-            snakeY.get(snakeY.size() - 1)
-        );
+        snakeX.add(snakeX.get(snakeX.size() - 1));
+        snakeY.add(snakeY.get(snakeY.size() - 1));
     }
-
-
-    // =========================
-    // SET DIRECTION
-    // =========================
 
     public void setDirection(int newXSpeed, int newYSpeed) {
 
-    // Prevent reversing directly into the snake's body
-    if (xSpeed != 0 && newXSpeed == -xSpeed) {
-        return;
+        if (xSpeed != 0 && newXSpeed == -xSpeed) {
+            return;
+        }
+
+        if (ySpeed != 0 && newYSpeed == -ySpeed) {
+            return;
+        }
+
+        xSpeed = newXSpeed;
+        ySpeed = newYSpeed;
     }
-
-    if (ySpeed != 0 && newYSpeed == -ySpeed) {
-        return;
-    }
-
-    xSpeed = newXSpeed;
-    ySpeed = newYSpeed;
-}
-
-
-    // =========================
-    // GETTERS
-    // =========================
 
     public int getHeadX() {
         return snakeX.get(0);

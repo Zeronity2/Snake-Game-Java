@@ -5,29 +5,17 @@ public class GameUI {
     int backgroundColor = 30;
     int whiteColor = 255;
 
-
-    // =========================
-    // START SCREEN
-    // =========================
-
     public void drawStartScreen(PApplet app, int highScore) {
 
         app.background(backgroundColor);
-
         app.textAlign(PApplet.CENTER, PApplet.CENTER);
 
         app.fill(0, 255, 0);
         app.textSize(60);
-
-        app.text(
-            "SNAKE",
-            app.width / 2,
-            75
-        );
+        app.text("SNAKE", app.width / 2, 75);
 
         app.fill(200);
         app.textSize(18);
-
         app.text(
             "Classic Snake Game",
             app.width / 2,
@@ -54,7 +42,6 @@ public class GameUI {
 
         app.fill(255);
         app.textSize(17);
-
         app.text(
             "CONTROLS",
             app.width / 2,
@@ -86,11 +73,6 @@ public class GameUI {
         );
     }
 
-
-    // =========================
-    // BUTTON
-    // =========================
-
     public void drawButton(
             PApplet app,
             float x,
@@ -117,27 +99,16 @@ public class GameUI {
         );
 
         app.fill(255);
-
         app.textAlign(
             PApplet.CENTER,
             PApplet.CENTER
         );
 
         app.textSize(22);
-
-        app.text(
-            label,
-            x,
-            y
-        );
+        app.text(label, x, y);
 
         app.rectMode(PApplet.CORNER);
     }
-
-
-    // =========================
-    // PLAY BUTTON HOVER
-    // =========================
 
     public boolean isPlayButtonHovered(PApplet app) {
 
@@ -153,20 +124,9 @@ public class GameUI {
                app.mouseY < buttonY + buttonHeight / 2;
     }
 
-
-    // =========================
-    // PLAY BUTTON CLICK
-    // =========================
-
     public boolean isPlayButtonClicked(PApplet app) {
-
         return isPlayButtonHovered(app);
     }
-
-
-    // =========================
-    // GAMEPLAY HUD
-    // =========================
 
     public void drawScore(
             PApplet app,
@@ -174,18 +134,15 @@ public class GameUI {
             int highScore,
             int level) {
 
-        // HUD background
         app.fill(20, 20, 28);
 
         app.rect(
             0,
             0,
             app.width,
-            45
+            GameConfig.HUD_HEIGHT
         );
 
-
-        // SCORE
         app.textAlign(
             PApplet.LEFT,
             PApplet.CENTER
@@ -194,31 +151,24 @@ public class GameUI {
         app.textSize(17);
 
         app.fill(255);
-
         app.text(
             "SCORE: " + score,
             20,
-            23
+            GameConfig.HUD_HEIGHT / 2
         );
 
-
-        // HIGH SCORE
         app.text(
             "HIGH: " + highScore,
             150,
-            23
+            GameConfig.HUD_HEIGHT / 2
         );
 
-
-        // LEVEL
         app.text(
             "LEVEL: " + level,
             290,
-            23
+            GameConfig.HUD_HEIGHT / 2
         );
 
-
-        // PAUSE
         app.textAlign(
             PApplet.RIGHT,
             PApplet.CENTER
@@ -229,14 +179,9 @@ public class GameUI {
         app.text(
             "P = Pause",
             app.width - 20,
-            23
+            GameConfig.HUD_HEIGHT / 2
         );
     }
-
-
-    // =========================
-    // GAME BOARD
-    // =========================
 
     public void drawGameBoard(PApplet app) {
 
@@ -244,27 +189,33 @@ public class GameUI {
 
         app.rect(
             0,
-            45,
+            GameConfig.HUD_HEIGHT,
             app.width,
-            app.height - 45
+            app.height - GameConfig.HUD_HEIGHT
         );
 
-
-        // Grid
         app.stroke(38, 38, 46);
         app.strokeWeight(1);
 
-        for (int x = 0; x <= app.width; x += 15) {
+        for (
+            int x = 0;
+            x <= app.width;
+            x += GameConfig.CELL_SIZE
+        ) {
 
             app.line(
                 x,
-                45,
+                GameConfig.HUD_HEIGHT,
                 x,
                 app.height
             );
         }
 
-        for (int y = 45; y <= app.height; y += 15) {
+        for (
+            int y = GameConfig.HUD_HEIGHT;
+            y <= app.height;
+            y += GameConfig.CELL_SIZE
+        ) {
 
             app.line(
                 0,
@@ -274,27 +225,19 @@ public class GameUI {
             );
         }
 
-
-        // Border
         app.stroke(80, 80, 90);
         app.strokeWeight(2);
-
         app.noFill();
 
         app.rect(
             1,
-            45,
+            GameConfig.HUD_HEIGHT,
             app.width - 2,
-            app.height - 46
+            app.height - GameConfig.HUD_HEIGHT - 1
         );
 
         app.noStroke();
     }
-
-
-    // =========================
-    // PAUSE SCREEN
-    // =========================
 
     public void drawPauseScreen(PApplet app) {
 
@@ -307,9 +250,9 @@ public class GameUI {
 
         app.rect(
             0,
-            45,
+            GameConfig.HUD_HEIGHT,
             app.width,
-            app.height - 45
+            app.height - GameConfig.HUD_HEIGHT
         );
 
         app.fill(255);
@@ -331,10 +274,45 @@ public class GameUI {
         );
     }
 
+    public void drawLevelUp(PApplet app, int level) {
 
-    // =========================
-    // GAME OVER SCREEN
-    // =========================
+        app.textAlign(
+            PApplet.CENTER,
+            PApplet.CENTER
+        );
+
+        app.fill(20, 20, 28, 220);
+
+        app.rectMode(PApplet.CENTER);
+
+        app.rect(
+            app.width / 2,
+            app.height / 2 - 70,
+            220,
+            75,
+            15
+        );
+
+        app.rectMode(PApplet.CORNER);
+
+        app.fill(0, 255, 120);
+        app.textSize(24);
+
+        app.text(
+            "LEVEL UP!",
+            app.width / 2,
+            app.height / 2 - 85
+        );
+
+        app.fill(255);
+        app.textSize(20);
+
+        app.text(
+            "LEVEL " + level,
+            app.width / 2,
+            app.height / 2 - 55
+        );
+    }
 
     public void drawGameOverScreen(
             PApplet app,
@@ -348,8 +326,6 @@ public class GameUI {
             PApplet.CENTER
         );
 
-
-        // GAME OVER
         app.fill(255, 80, 80);
         app.textSize(48);
 
@@ -359,8 +335,6 @@ public class GameUI {
             80
         );
 
-
-        // SCORE CARD
         app.fill(30, 30, 40);
 
         app.rectMode(PApplet.CENTER);
@@ -375,8 +349,6 @@ public class GameUI {
 
         app.rectMode(PApplet.CORNER);
 
-
-        // YOUR SCORE
         app.fill(200);
         app.textSize(16);
 
@@ -395,8 +367,6 @@ public class GameUI {
             175
         );
 
-
-        // HIGH SCORE
         app.fill(255, 220, 80);
         app.textSize(17);
 
@@ -406,8 +376,6 @@ public class GameUI {
             220
         );
 
-
-        // RESTART
         boolean restartHovering =
             isRestartButtonHovered(app);
 
@@ -421,8 +389,6 @@ public class GameUI {
             restartHovering
         );
 
-
-        // MAIN MENU
         boolean menuHovering =
             isMenuButtonHovered(app);
 
@@ -453,19 +419,12 @@ public class GameUI {
 
         app.rectMode(PApplet.CORNER);
 
-
-        // Cursor
         if (restartHovering || menuHovering) {
             app.cursor(PApplet.HAND);
         } else {
             app.cursor(PApplet.ARROW);
         }
     }
-
-
-    // =========================
-    // RESTART BUTTON HOVER
-    // =========================
 
     public boolean isRestartButtonHovered(PApplet app) {
 
@@ -481,11 +440,6 @@ public class GameUI {
                app.mouseY < buttonY + buttonHeight / 2;
     }
 
-
-    // =========================
-    // MENU BUTTON HOVER
-    // =========================
-
     public boolean isMenuButtonHovered(PApplet app) {
 
         float buttonX = app.width / 2;
@@ -500,75 +454,12 @@ public class GameUI {
                app.mouseY < buttonY + buttonHeight / 2;
     }
 
-
-    // =========================
-    // RESTART BUTTON CLICK
-    // =========================
-
     public boolean isRestartButtonClicked(PApplet app) {
-
         return isRestartButtonHovered(app);
     }
 
-
-    // =========================
-    // MENU BUTTON CLICK
-    // =========================
-
     public boolean isMenuButtonClicked(PApplet app) {
-
         return isMenuButtonHovered(app);
     }
-
-    // =========================
-// LEVEL UP NOTIFICATION
-// =========================
-
-public void drawLevelUp(
-        PApplet app,
-        int level) {
-
-    app.textAlign(
-        PApplet.CENTER,
-        PApplet.CENTER
-    );
-
-    // Notification background
-    app.fill(20, 20, 28, 220);
-
-    app.rectMode(PApplet.CENTER);
-
-    app.rect(
-        app.width / 2,
-        app.height / 2 - 70,
-        220,
-        75,
-        15
-    );
-
-    app.rectMode(PApplet.CORNER);
-
-
-    // LEVEL UP
-    app.fill(0, 255, 120);
-    app.textSize(24);
-
-    app.text(
-        "LEVEL UP!",
-        app.width / 2,
-        app.height / 2 - 85
-    );
-
-
-    // Level number
-    app.fill(255);
-    app.textSize(20);
-
-    app.text(
-        "LEVEL " + level,
-        app.width / 2,
-        app.height / 2 - 55
-    );
-}
 }
 

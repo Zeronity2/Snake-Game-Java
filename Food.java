@@ -6,37 +6,20 @@ public class Food {
     private int y;
     private int cellSize;
 
-
-    // =========================
-    // CONSTRUCTOR
-    // =========================
-
-    public Food(int cellSize, int width, int height) {
-
-        this.cellSize = cellSize;
+    public Food(int width, int height) {
+        this.cellSize = GameConfig.CELL_SIZE;
 
         // Temporary initial position
         x = cellSize;
-        y = 60;
+        y = GameConfig.HUD_HEIGHT + cellSize;
     }
 
+    public void generate(int width, int height, Snake snake) {
 
-    // =========================
-    // GENERATE FOOD
-    // =========================
-
-    public void generate(
-            int width,
-            int height,
-            Snake snake) {
-
-        int topOffset = 45;
-
-        // Keep food one cell inside the game border
         int minX = cellSize;
         int maxX = width - cellSize * 2;
 
-        int minY = topOffset + cellSize;
+        int minY = GameConfig.HUD_HEIGHT + cellSize;
         int maxY = height - cellSize * 2;
 
         int columns =
@@ -58,11 +41,6 @@ public class Food {
         } while (isOnSnake(snake));
     }
 
-
-    // =========================
-    // CHECK SNAKE COLLISION
-    // =========================
-
     private boolean isOnSnake(Snake snake) {
 
         for (int i = 0; i < snake.getSize(); i++) {
@@ -77,11 +55,6 @@ public class Food {
         return false;
     }
 
-
-    // =========================
-    // DRAW FOOD
-    // =========================
-
     public void draw(PApplet app) {
 
         // Shadow
@@ -94,7 +67,6 @@ public class Food {
             cellSize
         );
 
-
         // Main food
         app.fill(255, 70, 70);
 
@@ -104,7 +76,6 @@ public class Food {
             cellSize - 1,
             cellSize - 1
         );
-
 
         // Highlight
         app.fill(255, 180, 180);
@@ -116,11 +87,6 @@ public class Food {
             4
         );
     }
-
-
-    // =========================
-    // GETTERS
-    // =========================
 
     public int getX() {
         return x;
