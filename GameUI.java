@@ -16,10 +16,7 @@ public class GameUI {
 
         app.textAlign(PApplet.CENTER, PApplet.CENTER);
 
-        // -------------------------
-        // TITLE
-        // -------------------------
-
+        // Title
         app.fill(0, 255, 0);
         app.textSize(60);
 
@@ -29,11 +26,7 @@ public class GameUI {
             75
         );
 
-
-        // -------------------------
-        // SUBTITLE
-        // -------------------------
-
+        // Subtitle
         app.fill(200);
         app.textSize(18);
 
@@ -43,11 +36,7 @@ public class GameUI {
             125
         );
 
-
-        // -------------------------
-        // PLAY BUTTON
-        // -------------------------
-
+        // Play button
         boolean hovering = isPlayButtonHovered(app);
 
         if (hovering) {
@@ -66,11 +55,7 @@ public class GameUI {
             hovering
         );
 
-
-        // -------------------------
-        // CONTROLS
-        // -------------------------
-
+        // Controls
         app.fill(255);
         app.textSize(17);
 
@@ -95,11 +80,7 @@ public class GameUI {
             307
         );
 
-
-        // -------------------------
-        // HIGH SCORE
-        // -------------------------
-
+        // High score
         app.fill(255, 220, 80);
         app.textSize(18);
 
@@ -207,7 +188,6 @@ public class GameUI {
             45
         );
 
-
         // Score
         app.textAlign(
             PApplet.LEFT,
@@ -224,14 +204,12 @@ public class GameUI {
             23
         );
 
-
-        // High Score
+        // High score
         app.text(
             "HIGH: " + highScore,
             150,
             23
         );
-
 
         // Pause hint
         app.textAlign(
@@ -255,7 +233,7 @@ public class GameUI {
 
     public void drawGameBoard(PApplet app) {
 
-        // Game board background
+        // Board background
         app.fill(25, 25, 32);
 
         app.rect(
@@ -265,8 +243,7 @@ public class GameUI {
             app.height - 45
         );
 
-
-        // Subtle grid
+        // Grid
         app.stroke(38, 38, 46);
         app.strokeWeight(1);
 
@@ -290,8 +267,7 @@ public class GameUI {
             );
         }
 
-
-        // Board border
+        // Border
         app.stroke(80, 80, 90);
         app.strokeWeight(2);
 
@@ -319,8 +295,7 @@ public class GameUI {
             PApplet.CENTER
         );
 
-
-        // Dark overlay
+        // Overlay
         app.fill(0, 0, 0, 150);
 
         app.rect(
@@ -330,8 +305,7 @@ public class GameUI {
             app.height - 45
         );
 
-
-        // Paused text
+        // Title
         app.fill(255);
         app.textSize(40);
 
@@ -340,7 +314,6 @@ public class GameUI {
             app.width / 2,
             app.height / 2 - 30
         );
-
 
         // Instruction
         app.fill(200);
@@ -363,7 +336,7 @@ public class GameUI {
             int score,
             int highScore) {
 
-        app.background(backgroundColor);
+        app.background(20, 20, 28);
 
         app.textAlign(
             PApplet.CENTER,
@@ -371,44 +344,189 @@ public class GameUI {
         );
 
 
-        // Game Over
+        // -------------------------
+        // GAME OVER TITLE
+        // -------------------------
+
         app.fill(255, 80, 80);
-        app.textSize(45);
+        app.textSize(48);
 
         app.text(
             "GAME OVER",
             app.width / 2,
-            app.height / 2 - 70
+            80
         );
+
+
+        // -------------------------
+        // SCORE CARD
+        // -------------------------
+
+        app.fill(30, 30, 40);
+
+        app.rectMode(PApplet.CENTER);
+
+        app.rect(
+            app.width / 2,
+            165,
+            280,
+            100,
+            15
+        );
+
+        app.rectMode(PApplet.CORNER);
 
 
         // Score
-        app.fill(255);
-        app.textSize(20);
-
-        app.text(
-            "Score : " + score,
-            app.width / 2,
-            app.height / 2 - 15
-        );
-
-
-        // High Score
-        app.text(
-            "High Score : " + highScore,
-            app.width / 2,
-            app.height / 2 + 20
-        );
-
-
-        // Restart instruction
         app.fill(200);
+        app.textSize(16);
+
+        app.text(
+            "YOUR SCORE",
+            app.width / 2,
+            140
+        );
+
+        app.fill(255);
+        app.textSize(32);
+
+        app.text(
+            score,
+            app.width / 2,
+            175
+        );
+
+
+        // -------------------------
+        // HIGH SCORE
+        // -------------------------
+
+        app.fill(255, 220, 80);
+        app.textSize(17);
+
+        app.text(
+            "HIGH SCORE: " + highScore,
+            app.width / 2,
+            220
+        );
+
+
+        // -------------------------
+        // RESTART BUTTON
+        // -------------------------
+
+        boolean restartHovering =
+            isRestartButtonHovered(app);
+
+        drawButton(
+            app,
+            app.width / 2,
+            275,
+            200,
+            50,
+            "RESTART",
+            restartHovering
+        );
+
+
+        // -------------------------
+        // MENU BUTTON
+        // -------------------------
+
+        boolean menuHovering =
+            isMenuButtonHovered(app);
+
+        app.rectMode(PApplet.CENTER);
+
+        if (menuHovering) {
+            app.fill(80, 80, 90);
+        } else {
+            app.fill(55, 55, 65);
+        }
+
+        app.rect(
+            app.width / 2,
+            335,
+            200,
+            45,
+            10
+        );
+
+        app.fill(255);
         app.textSize(18);
 
         app.text(
-            "Press R to Restart",
+            "MAIN MENU",
             app.width / 2,
-            app.height / 2 + 70
+            335
         );
+
+        app.rectMode(PApplet.CORNER);
+
+
+        // Cursor
+        if (restartHovering || menuHovering) {
+            app.cursor(PApplet.HAND);
+        } else {
+            app.cursor(PApplet.ARROW);
+        }
+    }
+
+
+    // =========================
+    // RESTART BUTTON HOVER
+    // =========================
+
+    public boolean isRestartButtonHovered(PApplet app) {
+
+        float buttonX = app.width / 2;
+        float buttonY = 275;
+
+        float buttonWidth = 200;
+        float buttonHeight = 50;
+
+        return app.mouseX > buttonX - buttonWidth / 2 &&
+               app.mouseX < buttonX + buttonWidth / 2 &&
+               app.mouseY > buttonY - buttonHeight / 2 &&
+               app.mouseY < buttonY + buttonHeight / 2;
+    }
+
+
+    // =========================
+    // MENU BUTTON HOVER
+    // =========================
+
+    public boolean isMenuButtonHovered(PApplet app) {
+
+        float buttonX = app.width / 2;
+        float buttonY = 335;
+
+        float buttonWidth = 200;
+        float buttonHeight = 45;
+
+        return app.mouseX > buttonX - buttonWidth / 2 &&
+               app.mouseX < buttonX + buttonWidth / 2 &&
+               app.mouseY > buttonY - buttonHeight / 2 &&
+               app.mouseY < buttonY + buttonHeight / 2;
+    }
+
+
+    // =========================
+    // RESTART BUTTON CLICK
+    // =========================
+
+    public boolean isRestartButtonClicked(PApplet app) {
+
+        return isRestartButtonHovered(app);
+    }
+
+
+    // =========================
+    // MENU BUTTON CLICK
+    // =========================
+
+    public boolean isMenuButtonClicked(PApplet app) {
+
+        return isMenuButtonHovered(app);
     }
 }

@@ -82,7 +82,6 @@ public class SnakeGame extends PApplet {
             checkWallCollision();
             checkSelfCollision();
 
-            // Draw UI first
             ui.drawScore(
                 this,
                 score,
@@ -91,7 +90,6 @@ public class SnakeGame extends PApplet {
 
             ui.drawGameBoard(this);
 
-            // Draw game objects
             snake.draw(this);
             food.draw(this);
         }
@@ -146,18 +144,15 @@ public class SnakeGame extends PApplet {
 
             score += 10;
 
-            // Update high score
             if (score > highScore) {
                 highScore = score;
             }
 
-            // Generate new food
             food.generate(
                 width,
                 height
             );
 
-            // Grow snake
             snake.grow();
         }
     }
@@ -222,6 +217,29 @@ public class SnakeGame extends PApplet {
         );
 
         gameState = GameState.PLAYING;
+    }
+
+
+    // =========================
+    // RETURN TO MENU
+    // =========================
+
+    public void goToMainMenu() {
+
+        score = 0;
+
+        snake = new Snake(
+            300,
+            200,
+            cellSize
+        );
+
+        food.generate(
+            width,
+            height
+        );
+
+        gameState = GameState.START;
     }
 
 
@@ -315,10 +333,37 @@ public class SnakeGame extends PApplet {
 
     public void mousePressed() {
 
+
+        // START SCREEN → PLAY
         if (gameState == GameState.START &&
                 ui.isPlayButtonClicked(this)) {
 
             gameState = GameState.PLAYING;
+
+            return;
+        }
+
+
+        // GAME OVER BUTTONS
+        if (gameState == GameState.GAME_OVER) {
+
+
+            // RESTART
+            if (ui.isRestartButtonClicked(this)) {
+
+                restartGame();
+
+                return;
+            }
+
+
+            // MAIN MENU
+            if (ui.isMenuButtonClicked(this)) {
+
+                goToMainMenu();
+
+                return;
+            }
         }
     }
 
